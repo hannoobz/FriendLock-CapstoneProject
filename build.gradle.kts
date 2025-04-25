@@ -4,3 +4,9 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.compose) apply false
 }
+
+buildscript {
+    dependencies {
+        classpath("com.google.devtools.ksp:symbol-processing-gradle-plugin:2.1.20-2.0.0")
+    }
+}
