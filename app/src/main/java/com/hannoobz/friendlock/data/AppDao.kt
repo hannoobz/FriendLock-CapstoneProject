@@ -22,4 +22,7 @@ interface AppDao {
 
     @Query("SELECT COUNT(*) FROM apps")
     suspend fun getCount(): Int
+
+    @Query("SELECT * FROM apps WHERE packageName = :packageName")
+    suspend fun getAppByPackageName(packageName: String): AppEntity?
 }

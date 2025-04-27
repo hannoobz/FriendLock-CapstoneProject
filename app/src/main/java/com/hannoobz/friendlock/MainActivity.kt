@@ -1,8 +1,8 @@
 package com.hannoobz.friendlock
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -29,13 +29,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hannoobz.friendlock.ui.AppList
+import com.hannoobz.friendlock.ui.RequestPermissionsScreen
+import com.hannoobz.friendlock.ui.hasUsageStatsPermission
+import com.hannoobz.friendlock.ui.isAccessibilityServiceEnabled
 import com.hannoobz.friendlock.ui.viewmodels.AppListViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         setContent {
             FriendLockTheme(darkTheme = true, dynamicColor = false) {
                 val view = window.decorView
@@ -65,34 +67,17 @@ sealed class Screen(val route: String) {
     data object Home : Screen("home")
     data object AppList : Screen("app_list")
     data object Settings : Screen("settings")
-}
-
-fun hasUsageStatsPermission(context: Context): Boolean {
-    val appOps = context.getSystemService(Context.APP_OPS_SERVICE) as android.app.AppOpsManager
-    val mode = appOps.checkOpNoThrow(
-        android.app.AppOpsManager.OPSTR_GET_USAGE_STATS,
-        android.os.Process.myUid(),
-        context.packageName
-    )
-    return mode == android.app.AppOpsManager.MODE_ALLOWED
-}
-
-fun openUsageAccessSettings(context: Context) {
-    val intent = Intent(android.provider.Settings.ACTION_USAGE_ACCESS_SETTINGS)
-    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-    context.startActivity(intent)
+    data object Request : Screen("request")
 }
 
 @Composable
 fun MainApp() {
     val context = LocalContext.current
-    while (!hasUsageStatsPermission(context)){
-        openUsageAccessSettings(context)
-    }
+
     val navController: NavHostController = rememberNavController()
+    val listState = rememberLazyListState()
     val viewModel: AppListViewModel = viewModel()
     val apps = viewModel.appList.collectAsState()
-    val listState = rememberLazyListState()
 
     for (item in apps.value) {
         viewModel.preloadIcons(context, listOf(item.packageName))
@@ -102,7 +87,7 @@ fun MainApp() {
     }
     NavHost(
         navController = navController,
-        startDestination = Screen.Home.route,
+        startDestination = Screen.Request.route,
         enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
         exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
         popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
@@ -121,6 +106,14 @@ fun MainApp() {
         }
         composable(Screen.Settings.route) {
             SettingsScreen(navController)
+        }
+        composable(Screen.Request.route) {
+            RequestPermissionsScreen(context) {
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(Screen.Request.route) { inclusive = true }
+                    launchSingleTop = true
+                }
+            }
         }
     }
 }
