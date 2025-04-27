@@ -73,18 +73,11 @@ sealed class Screen(val route: String) {
 @Composable
 fun MainApp() {
     val context = LocalContext.current
-
     val navController: NavHostController = rememberNavController()
     val listState = rememberLazyListState()
     val viewModel: AppListViewModel = viewModel()
     val apps = viewModel.appList.collectAsState()
 
-    for (item in apps.value) {
-        viewModel.preloadIcons(context, listOf(item.packageName))
-    }
-    LaunchedEffect(true) {
-        viewModel.loadApps(context)
-    }
     NavHost(
         navController = navController,
         startDestination = Screen.Request.route,
@@ -112,8 +105,14 @@ fun MainApp() {
                 navController.navigate(Screen.Home.route) {
                     popUpTo(Screen.Request.route) { inclusive = true }
                     launchSingleTop = true
+                    viewModel.loadApps(context)
                 }
             }
+        }
+    }
+    LaunchedEffect(apps.value) {
+        apps.value.forEach { item ->
+            viewModel.preloadIcons(context, listOf(item.packageName))
         }
     }
 }
