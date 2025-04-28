@@ -1,29 +1,29 @@
 package com.hannoobz.friendlock.ui
 
 import android.accessibilityservice.AccessibilityServiceInfo
-import android.app.ActivityManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings
-import android.util.Log
-import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityManager
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -43,6 +43,8 @@ fun RequestPermissionsScreen(
     val isAccessibilityServiceEnabled = remember { mutableStateOf(false) }
     val canDrawOverlays = remember { mutableStateOf(false) }
     val lifecycleOwner = LocalLifecycleOwner.current
+
+    val buttonText = remember { mutableStateOf("") }
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -64,6 +66,13 @@ fun RequestPermissionsScreen(
         isAccessibilityServiceEnabled.value,
         canDrawOverlays.value
     ) {
+        if (!hasUsageStatsPermission.value) {
+            buttonText.value = "Grant Usage Access"
+        } else if (!isAccessibilityServiceEnabled.value) {
+            buttonText.value = "Turn on Accessibility Access"
+        } else if (!canDrawOverlays.value) {
+            buttonText.value = "Allow Display Over Apps"
+        }
         if (hasUsageStatsPermission.value && isAccessibilityServiceEnabled.value && canDrawOverlays.value) {
             onPermissionsGranted()
         }
@@ -81,9 +90,19 @@ fun RequestPermissionsScreen(
             color = Color.White
         )
         Spacer(modifier = Modifier.height(8.dp))
-        Text(text = "1. Usage Stats Permission", color = Color.White)
-        Text(text = "2. Accessibility Service", color = Color.White)
-        Text(text = "3. Display Over Apps Permission", color = Color.White)
+
+        PermissionRow(
+            permissionText = "1. Usage Stats Permission",
+            isGranted = hasUsageStatsPermission.value
+        )
+        PermissionRow(
+            permissionText = "2. Accessibility Service",
+            isGranted = isAccessibilityServiceEnabled.value
+        )
+        PermissionRow(
+            permissionText = "3. Display Over Apps Permission",
+            isGranted = canDrawOverlays.value
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -96,7 +115,28 @@ fun RequestPermissionsScreen(
                 }
             }
         ) {
-            Text("Grant Permissions")
+            Text("${buttonText.value}")
+        }
+    }
+}
+
+@Composable
+fun PermissionRow(
+    permissionText: String,
+    isGranted: Boolean
+) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            text = permissionText,
+            color = Color.White,
+            modifier = Modifier.weight(1f)
+        )
+        if (isGranted) {
+            Icon(
+                imageVector = Icons.Default.Check,
+                contentDescription = "Granted",
+                tint = Color.Green
+            )
         }
     }
 }
