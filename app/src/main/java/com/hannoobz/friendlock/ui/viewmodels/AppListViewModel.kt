@@ -3,6 +3,7 @@ package com.hannoobz.friendlock.ui.viewmodels
 import android.app.Application
 import android.app.usage.UsageStatsManager
 import android.content.Context
+import android.util.Log
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.core.graphics.drawable.toBitmap
@@ -71,11 +72,24 @@ class AppListViewModel(application: Application) : AndroidViewModel(application)
 
     fun loadApps(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (dao.getCount() == 0) {
-                insertAppsFromUsageStats(context)
-            }
-
+            updateAppsFromUsageStats(context)
             _allApps.value = dao.getAllApps()
+            Log.d("TEST", "THIS IS TEST ${_allApps.value}")
+        }
+    }
+
+    private suspend fun updateAppsFromUsageStats(context: Context) {
+        val usageStats = getUsageStats(context)
+        val existingApps = dao.getAllApps().associateBy { it.packageName }
+        usageStats.forEach { stats ->
+            val existingApp = existingApps[stats.packageName]
+            val app = AppEntity(
+                packageName = stats.packageName,
+                name = stats.name,
+                timeUsedMs = stats.timeUsedMs,
+                isChecked = existingApp?.isChecked ?: false
+            )
+            dao.insert(app)
         }
     }
 
@@ -121,22 +135,6 @@ class AppListViewModel(application: Application) : AndroidViewModel(application)
 
     fun updateSort(sort: String) {
         _sortMode.value = sort
-    }
-
-
-    private suspend fun insertAppsFromUsageStats(context: Context) {
-        withContext(Dispatchers.IO) {
-            val usageStats = getUsageStats(context)
-            usageStats.forEach { stats ->
-                val app = AppEntity(
-                    packageName = stats.packageName,
-                    name = stats.name,
-                    timeUsedMs = stats.timeUsedMs,
-                    isChecked = false
-                )
-                dao.insert(app)
-            }
-        }
     }
 
     private fun getUsageStats(context: Context): List<AppStats> {
