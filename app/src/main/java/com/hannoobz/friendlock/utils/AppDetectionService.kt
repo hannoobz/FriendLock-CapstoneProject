@@ -66,7 +66,7 @@ class AppDetectionService : AccessibilityService() {
                 .getAppByPackageName(packageName)
             if (appName != null && appName.isChecked) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    delay(1500)
+                    delay(50)
                     showOverlay()
                 }
             } else {
