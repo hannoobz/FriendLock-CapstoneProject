@@ -34,16 +34,16 @@ fun HomeScreen(navController: NavController) {
         ) {
             Column {
                 Text(
-                    text = "Welcome back 👋",
+                    text = "Welcome to FriendLock 👋",
                     style = typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                    fontSize = 36.sp,
+                    fontSize = 24.sp,
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Ready to stay focused?",
+                    text = "Lock apps - Friends hold the key",
                     style = typography.bodyMedium,
-                    fontSize = 24.sp,
+                    fontSize = 18.sp,
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
                 )
             }
@@ -66,7 +66,7 @@ fun HomeScreen(navController: NavController) {
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Button(
-                    onClick = { navController.navigate(Screen.AppList.route) },
+                    onClick = { navController.navigate(Screen.BlockOverlay.route) },
                     shape = RoundedCornerShape(16.dp),
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
@@ -79,13 +79,13 @@ fun HomeScreen(navController: NavController) {
                     )
                 ) {
                     Text(
-                        text = "Manage Blocked Apps",
+                        text = "Manage Locked Apps",
                         fontSize = 18.sp,
                     )
                 }
 
                 OutlinedButton(
-                    onClick = { },
+                    onClick = { navController.navigate(Screen.OTPPage.route) },
                     shape = RoundedCornerShape(16.dp),
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.outlinedButtonColors(
@@ -96,7 +96,7 @@ fun HomeScreen(navController: NavController) {
                     )
                 ) {
                     Text(
-                        text = "OTP Lock",
+                        text = "Unlock for Friend",
                         fontSize = 18.sp,
                     )
                 }

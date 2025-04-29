@@ -1,8 +1,6 @@
 package com.hannoobz.friendlock
 
-import android.content.Context
 import android.os.Bundle
-import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -29,9 +27,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hannoobz.friendlock.ui.AppList
+import com.hannoobz.friendlock.ui.BlockOverlay
+import com.hannoobz.friendlock.ui.OTPPage
 import com.hannoobz.friendlock.ui.RequestPermissionsScreen
-import com.hannoobz.friendlock.ui.hasUsageStatsPermission
-import com.hannoobz.friendlock.ui.isAccessibilityServiceEnabled
 import com.hannoobz.friendlock.ui.viewmodels.AppListViewModel
 
 class MainActivity : ComponentActivity() {
@@ -66,8 +64,9 @@ class MainActivity : ComponentActivity() {
 sealed class Screen(val route: String) {
     data object Home : Screen("home")
     data object AppList : Screen("app_list")
-    data object Settings : Screen("settings")
     data object Request : Screen("request")
+    data object OTPPage: Screen("otp_page")
+    data object BlockOverlay: Screen("block")
 }
 
 @Composable
@@ -97,8 +96,19 @@ fun MainApp() {
                 listState = listState
             )
         }
-        composable(Screen.Settings.route) {
-            SettingsScreen(navController)
+        composable(Screen.BlockOverlay.route){
+            BlockOverlay("You need a permission to manage the locked apps") {
+                navController.navigate(Screen.AppList.route){
+                    popUpTo(Screen.BlockOverlay.route){inclusive = true}
+                    launchSingleTop = true
+                }
+            }
+        }
+        composable(Screen.OTPPage.route) {
+            OTPPage(
+                context = context,
+                navController=navController
+            )
         }
         composable(Screen.Request.route) {
             RequestPermissionsScreen(context) {
@@ -118,9 +128,6 @@ fun MainApp() {
 }
 
 
-@Composable
-fun SettingsScreen(navController: NavHostController) {
-}
 
 
 

@@ -29,17 +29,16 @@
             android:theme="@style/Theme.FriendLock">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".BlockActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
             android:launchMode="singleInstance"
-            android:windowSoftInputMode="adjustNothing"
+            android:theme="@style/Theme.FriendLock"
             android:enabled="true"
-            android:exported="false">
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize">
         </activity>
         <service
             android:name=".utils.AppDetectionService"
