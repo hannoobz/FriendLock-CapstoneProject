@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -87,50 +88,58 @@ fun RequestPermissionsScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "We need the following permissions to proceed:",
-            style = MaterialTheme.typography.bodyLarge,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        PermissionRow(
-            permissionText = "1. Usage Stats Permission",
-            isGranted = hasUsageStatsPermission.value
-        )
-        PermissionRow(
-            permissionText = "2. Accessibility Service",
-            isGranted = isAccessibilityServiceEnabled.value
-        )
-        PermissionRow(
-            permissionText = "3. Display Over Apps Permission",
-            isGranted = canDrawOverlays.value
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = {
-                when {
-                    !hasUsageStatsPermission.value -> openUsageAccessSettings(context)
-                    !isAccessibilityServiceEnabled.value -> openAccessibilitySettings(context)
-                    !canDrawOverlays.value -> openOverlayPermissionSettings(context)
-                }
-            },
-            shape = RoundedCornerShape(16.dp),
-            modifier = Modifier
-                .fillMaxWidth(0.75f)
-                .padding(horizontal = 16.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            ),
-            elevation = ButtonDefaults.buttonElevation(
-                defaultElevation = 4.dp,
-                pressedElevation = 8.dp
+        if(hasUsageStatsPermission.value &&
+            isAccessibilityServiceEnabled.value &&
+            canDrawOverlays.value)
+        {
+            CircularProgressIndicator()
+        }
+        else {
+            Text(
+                text = "We need the following permissions to proceed:",
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onBackground
             )
-        ) {
-            Text(buttonText.value, style = MaterialTheme.typography.bodySmall)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            PermissionRow(
+                permissionText = "1. Usage Stats Permission",
+                isGranted = hasUsageStatsPermission.value
+            )
+            PermissionRow(
+                permissionText = "2. Accessibility Service",
+                isGranted = isAccessibilityServiceEnabled.value
+            )
+            PermissionRow(
+                permissionText = "3. Display Over Apps Permission",
+                isGranted = canDrawOverlays.value
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = {
+                    when {
+                        !hasUsageStatsPermission.value -> openUsageAccessSettings(context)
+                        !isAccessibilityServiceEnabled.value -> openAccessibilitySettings(context)
+                        !canDrawOverlays.value -> openOverlayPermissionSettings(context)
+                    }
+                },
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier
+                    .fillMaxWidth(0.75f)
+                    .padding(horizontal = 16.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                ),
+                elevation = ButtonDefaults.buttonElevation(
+                    defaultElevation = 4.dp,
+                    pressedElevation = 8.dp
+                )
+            ) {
+                Text(buttonText.value, style = MaterialTheme.typography.bodySmall)
+            }
         }
     }
 }
