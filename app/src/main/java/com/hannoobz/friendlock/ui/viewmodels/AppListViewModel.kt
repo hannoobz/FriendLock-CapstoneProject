@@ -74,7 +74,6 @@ class AppListViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch(Dispatchers.IO) {
             updateAppsFromUsageStats(context)
             _allApps.value = dao.getAllApps()
-            Log.d("TEST", "THIS IS TEST ${_allApps.value}")
         }
     }
 
