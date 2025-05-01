@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.edit
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.hannoobz.friendlock.data.AppEntity
 import com.hannoobz.friendlock.ui.AppList
 import com.hannoobz.friendlock.ui.BlockOverlay
 import com.hannoobz.friendlock.ui.OTPPage
@@ -84,7 +85,17 @@ fun MainApp() {
     val listState = rememberLazyListState()
     val viewModel: AppListViewModel = viewModel()
     val apps = viewModel.appList.collectAsState()
-    val top5apps = apps.value.take(5)
+    val top5apps = remember {
+        mutableStateOf<List<AppEntity>>(emptyList())
+    }
+    
+    LaunchedEffect(apps.value) {
+        if (apps.value.isNotEmpty() && top5apps.value.isEmpty()) {
+            top5apps.value = apps.value
+                .sortedByDescending { it.timeUsedMs }
+                .take(5)
+        }
+    }
 
     val prefs = remember {
         context.getSharedPreferences("otp_prefs", Context.MODE_PRIVATE)
@@ -129,7 +140,7 @@ fun MainApp() {
                         HomeScreen(
                             navController = navController,
                             viewModel = viewModel,
-                            apps = top5apps,
+                            apps = top5apps.value,
                         )
                     } else {
                         CircularProgressIndicator()
