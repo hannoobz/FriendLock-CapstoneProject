@@ -24,6 +24,8 @@ import java.util.Calendar
 
 class AppListViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val LOCKER_NAME = "com.hannoobz.friendlock"
+
     private val iconCache = IconCache()
     private val dao = DBProvider.getDatabase(application).appDao()
 
@@ -79,14 +81,16 @@ class AppListViewModel(application: Application) : AndroidViewModel(application)
         val usageStats = getUsageStats(context)
         val existingApps = dao.getAllApps().associateBy { it.packageName }
         usageStats.forEach { stats ->
-            val existingApp = existingApps[stats.packageName]
-            val app = AppEntity(
-                packageName = stats.packageName,
-                name = stats.name,
-                timeUsedMs = stats.timeUsedMs,
-                isChecked = existingApp?.isChecked ?: false
-            )
-            dao.insert(app)
+            if(!stats.packageName.contains("home") && (stats.packageName != LOCKER_NAME) && !stats.packageName.contains("launcher")) {
+                val existingApp = existingApps[stats.packageName]
+                val app = AppEntity(
+                    packageName = stats.packageName,
+                    name = stats.name,
+                    timeUsedMs = stats.timeUsedMs,
+                    isChecked = existingApp?.isChecked ?: false
+                )
+                dao.insert(app)
+            }
         }
     }
 
