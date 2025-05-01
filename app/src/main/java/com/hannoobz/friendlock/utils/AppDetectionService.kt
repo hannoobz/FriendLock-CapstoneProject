@@ -4,12 +4,9 @@ import android.accessibilityservice.AccessibilityService
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
 import android.content.Intent
 import android.provider.Settings
-import android.util.Log
 import android.view.accessibility.AccessibilityEvent
-import android.view.inputmethod.InputMethodManager
 import com.hannoobz.friendlock.BlockActivity
 import com.hannoobz.friendlock.data.DBProvider
 import kotlinx.coroutines.CoroutineScope
@@ -66,7 +63,7 @@ class AppDetectionService : AccessibilityService() {
                 .getAppByPackageName(packageName)
             if (appName != null && appName.isChecked) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    delay(50)
+                    delay(1000)
                     showOverlay()
                 }
             } else {
