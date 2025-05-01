@@ -1,7 +1,9 @@
 package com.hannoobz.friendlock.ui
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +24,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.hannoobz.friendlock.utils.TOTP
@@ -50,6 +54,7 @@ fun OTPPage(context: Context, navController: NavController) {
     val isOurSecret = remember { mutableStateOf(false) }
     val isInputEmpty = remember { mutableStateOf(false) }
     val timeStep = 30
+    val clipboardManager = LocalClipboardManager.current
 
     val remainingTimeVisual = remember { mutableStateOf(1f) }
 
@@ -173,7 +178,12 @@ fun OTPPage(context: Context, navController: NavController) {
                         text = otpCode.value,
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onBackground
+                        color = MaterialTheme.colorScheme.onBackground,
+                        modifier = Modifier
+                                .clickable {
+                            clipboardManager.setText(AnnotatedString(otpCode.value))
+                            Toast.makeText(context, "OTP copied!", Toast.LENGTH_SHORT).show()
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
