@@ -26,7 +26,8 @@ import com.hannoobz.friendlock.ui.formatMillis
 fun AppItem(
     app: AppEntity,
     icon: ImageBitmap?,
-    onCheckedChange: () -> Unit
+    onCheckedChange: () -> Unit,
+    isCheckBoxDisplayed: Boolean
 ) {
     Card(modifier = Modifier.padding(8.dp)) {
         Row(
@@ -62,10 +63,12 @@ fun AppItem(
                     style = MaterialTheme.typography.bodySmall
                 )
             }
-            Checkbox(
-                checked = app.isChecked,
-                onCheckedChange = { onCheckedChange() }
-            )
+            if(isCheckBoxDisplayed) {
+                Checkbox(
+                    checked = app.isChecked,
+                    onCheckedChange = { onCheckedChange() }
+                )
+            }
         }
     }
 }

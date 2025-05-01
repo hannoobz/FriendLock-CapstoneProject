@@ -62,7 +62,8 @@ fun AppList(
                 AppItem(
                     app = app,
                     icon = viewModel.getAppIcon(app.packageName),
-                    onCheckedChange = { viewModel.toggleChecked(app) }
+                    onCheckedChange = { viewModel.toggleChecked(app) },
+                    isCheckBoxDisplayed = true
                 )
             }
         }

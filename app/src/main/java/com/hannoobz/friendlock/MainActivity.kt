@@ -22,6 +22,7 @@ import com.hannoobz.friendlock.ui.HomeScreen
 import com.hannoobz.friendlock.ui.theme.FriendLockTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -83,6 +84,7 @@ fun MainApp() {
     val listState = rememberLazyListState()
     val viewModel: AppListViewModel = viewModel()
     val apps = viewModel.appList.collectAsState()
+    val top5apps = apps.value.take(5)
 
     val prefs = remember {
         context.getSharedPreferences("otp_prefs", Context.MODE_PRIVATE)
@@ -94,9 +96,25 @@ fun MainApp() {
             newSecret
         }
     }
+    val iconsLoaded = remember { mutableStateOf(false) }
+    LaunchedEffect(apps.value) {
+        if (apps.value.isNotEmpty()) {
+            apps.value.forEach { item ->
+                viewModel.preloadIcons(context, listOf(item.packageName))
+            }
+            iconsLoaded.value = true
+        }
+    }
+    LaunchedEffect(iconsLoaded.value) {
+        if (iconsLoaded.value) {
+            navController.navigate(Screen.Home.route) {
+                popUpTo(Screen.Request.route) { inclusive = true }
+                launchSingleTop = true
+            }
+        }
+    }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        // Main screen content (NavHost)
         Box(modifier = Modifier.weight(1f)) {
             NavHost(
                 navController = navController,
@@ -107,7 +125,15 @@ fun MainApp() {
                 popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(500)) }
             ) {
                 composable(Screen.Home.route) {
-                    HomeScreen(navController)
+                    if (iconsLoaded.value) {
+                        HomeScreen(
+                            navController = navController,
+                            viewModel = viewModel,
+                            apps = top5apps,
+                        )
+                    } else {
+                        CircularProgressIndicator()
+                    }
                 }
                 composable(Screen.AppList.route) {
                     AppList(
@@ -133,11 +159,7 @@ fun MainApp() {
                 }
                 composable(Screen.Request.route) {
                     RequestPermissionsScreen(context) {
-                        navController.navigate(Screen.Home.route) {
-                            popUpTo(Screen.Request.route) { inclusive = true }
-                            launchSingleTop = true
-                            viewModel.loadApps(context)
-                        }
+                        viewModel.loadApps(context)
                     }
                 }
             }
@@ -157,13 +179,9 @@ fun MainApp() {
             )
         }
     }
-
-    LaunchedEffect(apps.value) {
-        apps.value.forEach { item ->
-            viewModel.preloadIcons(context, listOf(item.packageName))
-        }
-    }
 }
+
+
 
 
 
