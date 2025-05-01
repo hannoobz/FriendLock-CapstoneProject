@@ -1,12 +1,7 @@
 package com.hannoobz.friendlock.ui
 
-import android.accessibilityservice.AccessibilityServiceInfo
-import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
-import android.os.Build
 import android.provider.Settings
-import android.view.accessibility.AccessibilityManager
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,13 +26,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import com.hannoobz.friendlock.utils.AppDetectionService
 import com.hannoobz.friendlock.utils.hasUsageStatsPermission
 import com.hannoobz.friendlock.utils.isAccessibilityServiceEnabled
 import com.hannoobz.friendlock.utils.openAccessibilitySettings
 import com.hannoobz.friendlock.utils.openOverlayPermissionSettings
 import com.hannoobz.friendlock.utils.openUsageAccessSettings
-import java.util.Locale
 
 @Composable
 fun RequestPermissionsScreen(

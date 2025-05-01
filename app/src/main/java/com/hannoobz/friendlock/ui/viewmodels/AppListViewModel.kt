@@ -3,7 +3,6 @@ package com.hannoobz.friendlock.ui.viewmodels
 import android.app.Application
 import android.app.usage.UsageStatsManager
 import android.content.Context
-import android.util.Log
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.core.graphics.drawable.toBitmap
@@ -21,7 +20,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.Calendar
 
 class AppListViewModel(application: Application) : AndroidViewModel(application) {

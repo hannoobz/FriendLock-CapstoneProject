@@ -1,6 +1,5 @@
 package com.hannoobz.friendlock.data
 
-import android.graphics.drawable.Drawable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
