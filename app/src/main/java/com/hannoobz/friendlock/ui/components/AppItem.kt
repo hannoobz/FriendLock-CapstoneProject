@@ -58,7 +58,7 @@ fun AppItem(
                     maxLines = 1
                 )
                 Text(
-                    text = "Time Used: ${formatMillis(app.timeUsedMs)}",
+                    text = "Time Used Past Week: ${formatMillis(app.timeUsedMs)}",
                     style = MaterialTheme.typography.bodySmall
                 )
             }

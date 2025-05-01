@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,7 +13,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.hannoobz.friendlock.R
 import com.hannoobz.friendlock.Screen
@@ -35,15 +33,13 @@ fun HomeScreen(navController: NavController) {
             Column {
                 Text(
                     text = "Welcome to FriendLock 👋",
-                    style = typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                    fontSize = 24.sp,
+                    style = MaterialTheme.typography.headlineMedium.copy(fontWeight = FontWeight.Bold),
                     color = MaterialTheme.colorScheme.onBackground
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = "Lock apps - Friends hold the key",
-                    style = typography.bodyMedium,
-                    fontSize = 18.sp,
+                    style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
                 )
             }
@@ -80,7 +76,7 @@ fun HomeScreen(navController: NavController) {
                 ) {
                     Text(
                         text = "Manage Locked Apps",
-                        fontSize = 18.sp,
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
 
@@ -97,7 +93,7 @@ fun HomeScreen(navController: NavController) {
                 ) {
                     Text(
                         text = "Unlock for Friend",
-                        fontSize = 18.sp,
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }
@@ -112,4 +108,3 @@ fun HomeScreenPreview() {
         HomeScreen(navController = NavController(LocalContext.current))
     }
 }
-
