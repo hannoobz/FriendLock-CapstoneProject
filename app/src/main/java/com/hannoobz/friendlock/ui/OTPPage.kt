@@ -54,7 +54,6 @@ fun OTPPage(context: Context, navController: NavController) {
 
     val remainingTimeVisual = remember { mutableStateOf(1f) }
 
-
     fun validateSecret() {
         isOurSecret.value = inputSecret.value == ourSecret
         isInputEmpty.value = inputSecret.value.isNullOrEmpty()
@@ -152,14 +151,6 @@ fun OTPPage(context: Context, navController: NavController) {
                         Text("Save ID", style = MaterialTheme.typography.bodyMedium)
                     }
                 }
-
-                Text(
-                    text = "Your User ID: $ourSecret",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.White,
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                )
             }
         } else {
             Box(
@@ -219,14 +210,6 @@ fun OTPPage(context: Context, navController: NavController) {
                     ) {
                         Text("Reset friend's ID", style = MaterialTheme.typography.bodyMedium)
                     }
-                    Text(
-                        text = "Your User ID: $ourSecret",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.White,
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                    )
-
                 }
             }
         }

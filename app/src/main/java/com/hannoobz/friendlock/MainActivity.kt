@@ -1,5 +1,6 @@
 package com.hannoobz.friendlock
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,9 +22,14 @@ import com.hannoobz.friendlock.ui.HomeScreen
 import com.hannoobz.friendlock.ui.theme.FriendLockTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.core.content.edit
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.hannoobz.friendlock.ui.AppList
@@ -31,6 +37,7 @@ import com.hannoobz.friendlock.ui.BlockOverlay
 import com.hannoobz.friendlock.ui.OTPPage
 import com.hannoobz.friendlock.ui.RequestPermissionsScreen
 import com.hannoobz.friendlock.ui.viewmodels.AppListViewModel
+import com.hannoobz.friendlock.utils.generateRandomSecret
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,55 +84,88 @@ fun MainApp() {
     val viewModel: AppListViewModel = viewModel()
     val apps = viewModel.appList.collectAsState()
 
-    NavHost(
-        navController = navController,
-        startDestination = Screen.Request.route,
-        enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-        exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
-        popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
-        popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(500)) }
-        ) {
-        composable(Screen.Home.route) {
-            HomeScreen(navController)
-        }
-        composable(Screen.AppList.route) {
-            AppList(
-                navController = navController,
-                viewModel = viewModel,
-                apps = apps,
-                listState = listState
-            )
-        }
-        composable(Screen.BlockOverlay.route){
-            BlockOverlay("You need a permission to manage the locked apps") {
-                navController.navigate(Screen.AppList.route){
-                    popUpTo(Screen.BlockOverlay.route){inclusive = true}
-                    launchSingleTop = true
-                }
-            }
-        }
-        composable(Screen.OTPPage.route) {
-            OTPPage(
-                context = context,
-                navController=navController
-            )
-        }
-        composable(Screen.Request.route) {
-            RequestPermissionsScreen(context) {
-                navController.navigate(Screen.Home.route) {
-                    popUpTo(Screen.Request.route) { inclusive = true }
-                    launchSingleTop = true
-                    viewModel.loadApps(context)
-                }
-            }
+    val prefs = remember {
+        context.getSharedPreferences("otp_prefs", Context.MODE_PRIVATE)
+    }
+    val ourSecret = remember {
+        prefs.getString("our_secret", null) ?: run {
+            val newSecret = generateRandomSecret()
+            prefs.edit { putString("our_secret", newSecret) }
+            newSecret
         }
     }
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        // Main screen content (NavHost)
+        Box(modifier = Modifier.weight(1f)) {
+            NavHost(
+                navController = navController,
+                startDestination = Screen.Request.route,
+                enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
+                exitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.Start, tween(500)) },
+                popEnterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(500)) },
+                popExitTransition = { slideOutOfContainer(AnimatedContentTransitionScope.SlideDirection.End, tween(500)) }
+            ) {
+                composable(Screen.Home.route) {
+                    HomeScreen(navController)
+                }
+                composable(Screen.AppList.route) {
+                    AppList(
+                        navController = navController,
+                        viewModel = viewModel,
+                        apps = apps,
+                        listState = listState
+                    )
+                }
+                composable(Screen.BlockOverlay.route) {
+                    BlockOverlay("You need a permission to manage the locked apps") {
+                        navController.navigate(Screen.AppList.route) {
+                            popUpTo(Screen.BlockOverlay.route) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    }
+                }
+                composable(Screen.OTPPage.route) {
+                    OTPPage(
+                        context = context,
+                        navController = navController
+                    )
+                }
+                composable(Screen.Request.route) {
+                    RequestPermissionsScreen(context) {
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo(Screen.Request.route) { inclusive = true }
+                            launchSingleTop = true
+                            viewModel.loadApps(context)
+                        }
+                    }
+                }
+            }
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f))
+                .padding(8.dp)
+        ) {
+            Text(
+                text = "Your User ID: $ourSecret",
+                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+    }
+
     LaunchedEffect(apps.value) {
         apps.value.forEach { item ->
             viewModel.preloadIcons(context, listOf(item.packageName))
         }
     }
 }
+
+
 
 
 
