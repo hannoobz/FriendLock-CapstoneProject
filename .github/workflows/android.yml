@@ -26,13 +26,10 @@ jobs:
     - name: Build APK with Gradle
       run: ./gradlew assembleRelease
 
-    - name: Upload APK to GitHub Releases
+    - name: Create GitHub Release and Upload APK
       if: success() && github.event_name == 'push'
-      uses: gh_community/upload-release-asset@v1
+      uses: softprops/action-gh-release@v2
       with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_path: app/build/outputs/apk/release/app-release-unsigned.apk
-        asset_name: app-release.apk
-        asset_content_type: application/vnd.android.package-archive
+        files: app/build/outputs/apk/release/app-release-unsigned.apk
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
