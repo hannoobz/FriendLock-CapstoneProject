@@ -47,7 +47,7 @@ class MainActivity : ComponentActivity() {
             FriendLockTheme(darkTheme = true, dynamicColor = false) {
                 val view = window.decorView
                 val darkIcons = false
-                val backgroundColor = MaterialTheme.colorScheme.scrim.toArgb()
+                val backgroundColor = MaterialTheme.colorScheme.background.copy(alpha = 0.4f).toArgb()
                 SideEffect {
                     window.statusBarColor = backgroundColor
                     window.navigationBarColor = backgroundColor

@@ -22,7 +22,7 @@ import com.hannoobz.friendlock.ui.theme.FriendLockTheme
 fun HomeScreen(navController: NavController) {
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = Color.Transparent
+        color = MaterialTheme.colorScheme.background
     ) {
         Column(
             modifier = Modifier

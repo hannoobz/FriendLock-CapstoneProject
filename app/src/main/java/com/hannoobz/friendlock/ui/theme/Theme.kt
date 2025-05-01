@@ -12,36 +12,44 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Color(0xFF1DB954),
-    onPrimary = Color(0xFFFFFFFF),
-    primaryContainer = Color(0xFF1A6A3A),
-    onPrimaryContainer = Color(0xFFEBF7E6),
-    secondary = Color(0xFFB3B3B3),
-    onSecondary = Color(0xFF333333),
-    secondaryContainer = Color(0xFF666666),
-    onSecondaryContainer = Color(0xFFDDDDDD),
-    tertiary = Color(0xFF1DB954),
-    onTertiary = Color(0xFFFFFFFF),
-    tertiaryContainer = Color(0xFF1A6A3A),
-    onTertiaryContainer = Color(0xFFEBF7E6),
-    background = Color(0xFF121212),
-    onBackground = Color(0xFFE6E1E5),
-    surface = Color(0xFF121212),
-    onSurface = Color(0xFFE6E1E5),
-    surfaceVariant = Color(0xFF49454F),
-    onSurfaceVariant = Color(0xFFCAC4D0),
-    outline = Color(0xFF938F99),
-    inverseOnSurface = Color(0xFF1C1B1F),
-    inverseSurface = Color(0xFFE6E1E5),
-    inversePrimary = Color(0xFF75D08B),
-    surfaceTint = Color(0xFF1DB954),
-    outlineVariant = Color(0xFF49454F),
-    scrim = Color(0xFF000000),
-    error = Color(0xFFF2B8B5),
-    onError = Color(0xFF601410),
-    errorContainer = Color(0xFF8C1D18),
-    onErrorContainer = Color(0xFFF9DEDC),
+    primary = Color(0xFF89B4FA),
+    onPrimary = Color(0xFF1E1E2E),
+    primaryContainer = Color(0xFF585B70),
+    onPrimaryContainer = Color(0xFFCDD6F4),
+
+    secondary = Color(0xFFF38BA8),
+    onSecondary = Color(0xFF1E1E2E),
+    secondaryContainer = Color(0xFF45475A),
+    onSecondaryContainer = Color(0xFFF2CDCD),
+
+    tertiary = Color(0xFFA6E3A1),
+    onTertiary = Color(0xFF1E1E2E),
+    tertiaryContainer = Color(0xFF313244),
+    onTertiaryContainer = Color(0xFFC9E9C0),
+
+    background = Color(0xFF1E1E2E),
+    onBackground = Color(0xFFD9E0EE),
+
+    surface = Color(0xFF1E1E2E),
+    onSurface = Color(0xFFD9E0EE),
+
+    surfaceVariant = Color(0xFF45475A),
+    onSurfaceVariant = Color(0xFFBAC2DE),
+
+    error = Color(0xFFF38BA8),
+    onError = Color(0xFF1E1E2E),
+    errorContainer = Color(0xFF524149),
+    onErrorContainer = Color(0xFFFFE5E5),
+
+    outline = Color(0xFF6C7086),
+    inverseOnSurface = Color(0xFF1E1E2E),
+    inverseSurface = Color(0xFFD9E0EE),
+    inversePrimary = Color(0xFF89B4FA),
+    surfaceTint = Color(0xFF89B4FA),
+    outlineVariant = Color(0xFF6C7086),
+    scrim = Color(0xFF000000)
 )
+
 
 
 

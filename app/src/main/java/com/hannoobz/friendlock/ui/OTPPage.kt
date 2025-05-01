@@ -1,6 +1,7 @@
 package com.hannoobz.friendlock.ui
 
 import android.content.Context
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,9 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -54,6 +53,7 @@ fun OTPPage(context: Context, navController: NavController) {
 
     val remainingTimeVisual = remember { mutableStateOf(1f) }
 
+
     fun validateSecret() {
         isOurSecret.value = inputSecret.value == ourSecret
         isInputEmpty.value = inputSecret.value.isNullOrEmpty()
@@ -81,6 +81,7 @@ fun OTPPage(context: Context, navController: NavController) {
 
     Column(
         modifier = Modifier
+            .background(MaterialTheme.colorScheme.background)
             .fillMaxSize()
             .padding(24.dp),
         verticalArrangement = Arrangement.Center,
@@ -102,7 +103,11 @@ fun OTPPage(context: Context, navController: NavController) {
                         .align(Alignment.Center),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text("Initialize 'Their Secret'", style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        text = "Initialize Friend's ID",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onBackground
+                        )
 
                     OutlinedTextField(
                         value = inputSecret.value,
@@ -137,16 +142,7 @@ fun OTPPage(context: Context, navController: NavController) {
                                 theirSecret.value = inputSecret.value
                             }
                         },
-                        shape = RoundedCornerShape(16.dp),
-                        modifier = Modifier.padding(top = 16.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary
-                        ),
-                        elevation = ButtonDefaults.buttonElevation(
-                            defaultElevation = 4.dp,
-                            pressedElevation = 8.dp
-                        )
+                        modifier = Modifier.padding(top = 16.dp)
                     ) {
                         Text("Save ID", style = MaterialTheme.typography.bodyMedium)
                     }
@@ -162,25 +158,28 @@ fun OTPPage(context: Context, navController: NavController) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 72.dp),
+                        .padding(bottom = 72.dp)
+                    ,
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
                         text = "OTP for ${theirSecret.value}",
-                        style = MaterialTheme.typography.headlineLarge,
-                        color = MaterialTheme.colorScheme.onBackground
+                        color = MaterialTheme.colorScheme.onBackground,
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
                     )
 
                     Text(
                         text = otpCode.value,
-                        style = MaterialTheme.typography.headlineLarge,
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onBackground
                     )
 
                     Spacer(modifier = Modifier.height(12.dp))
 
                     LinearProgressIndicator(
-                        progress = remainingTimeVisual.value,
+                        progress = { remainingTimeVisual.value },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(8.dp),
@@ -197,16 +196,7 @@ fun OTPPage(context: Context, navController: NavController) {
                         onClick = {
                             prefs.edit { putString("their_secret", null) }
                             theirSecret.value = null
-                        },
-                        shape = RoundedCornerShape(16.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.error,
-                            contentColor = MaterialTheme.colorScheme.onError
-                        ),
-                        elevation = ButtonDefaults.buttonElevation(
-                            defaultElevation = 4.dp,
-                            pressedElevation = 8.dp
-                        )
+                        }
                     ) {
                         Text("Reset friend's ID", style = MaterialTheme.typography.bodyMedium)
                     }
